@@ -1,15 +1,31 @@
 import React from 'react';
-// 1: StatusBarとPlatformをimport対象に追加
-import { StyleSheet, Text, View, StatusBar, Platform } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  StatusBar,
+  Platform,
+  ScrollView, // 1: スクロールビューのインポート
+} from 'react-native';
 
-// 2: 高さの判断をして値を設定
 const STATUSBAR_HEIGHT = Platform.OS == 'ios' ? 20 : StatusBar.currentHeight;
 
 export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
+        { /* 2: フィルタの部分 */ }
+        <View style={styles.filter}>
+          <Text>Filterがここに配置されます</Text>
+        </View>
+        { /* 3: TODOリスト */ }
+        <ScrollView style={styles.todolist}>
+          <Text>Todoリストがここに配置されます</Text>
+        </ScrollView>
+        { /* 4: 入力スペース */ }
+        <View style={styles.input}>
+          <Text>テキスト入力がここに配置されます</Text>
+        </View>
       </View>
     );
   }
@@ -19,10 +35,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    // 3 : paddingTop にステータスバーの高さを指定して下にずらす
     paddingTop: STATUSBAR_HEIGHT,
-    // 4 : 使わないスタイルを削除する
-//    alignItems: 'center',
-//    justifyContent: 'center',
+  },
+  // 5: 追加したUIのスタイル
+  filter: {
+    height: 30,
+  },
+  todolist: {
+    flex: 1
+  },
+  input: {
+    height: 30
   },
 });
