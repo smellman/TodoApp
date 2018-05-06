@@ -10,12 +10,10 @@ import {
   TextInput,
   Button,
   KeyboardAvoidingView,
-  // 1: AsyncStorageを追加
   AsyncStorage,
 } from 'react-native';
 
 const STATUSBAR_HEIGHT = Platform.OS == 'ios' ? 20 : StatusBar.currentHeight;
-// 2: TODOを保持するKey/Valueストアのキーを定義
 const TODO = "@todoapp.todo"
 
 export default class App extends React.Component {
@@ -26,15 +24,15 @@ export default class App extends React.Component {
       todo: [],
       currentIndex: 0,
       inputText: "",
+      // 1: filter用のテキストを追加
+      filterText: "",
     }
   }
 
-  // 3: コンポーネントがマウントされた段階で読み込みを行う
   componentDidMount() {
     this.loadTodo()
   }
 
-  // 4: AsyncStorageからTODOを読み込む処理
   loadTodo = async () => {
     try {
       const todoString = await AsyncStorage.getItem(TODO)
@@ -48,7 +46,6 @@ export default class App extends React.Component {
     }
   }
 
-  // 5: AsyncStorageへTODOを保存する
   saveTodo = async (todo) => {
     try {
       const todoString = JSON.stringify(todo)
@@ -71,18 +68,30 @@ export default class App extends React.Component {
       currentIndex: index,
       inputText: ""
     })
-    // 6: SaveTodoを呼んで保存をする
     this.saveTodo(todo)
   }
 
   render() {
+    // 2: フィルター処理
+    const filterText = this.state.filterText
+    let todo = this.state.todo
+    if (filterText !== "") {
+      todo = todo.filter(t => t.title.includes(filterText))
+    }
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding">
         <View style={styles.filter}>
-          <Text>Filterがここに配置されます</Text>
+          { /* 3: フィルタ入力 */ }
+          <TextInput
+            onChangeText={(text) => this.setState({filterText: text})}
+            value={this.state.filterText}
+            style={styles.inputText}
+            placeholder="Type filter text"
+          />
         </View>
         <ScrollView style={styles.todolist}>
-          <FlatList data={this.state.todo}
+          { /* 4: データをフィルタした結果となるように修正 */ }
+          <FlatList data={todo}
             renderItem={({item}) => <Text>{item.title}</Text>}
             keyExtractor={(item, index) => "todo_" + item.index}
           />
