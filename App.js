@@ -11,10 +11,25 @@ import {
   Button,
   KeyboardAvoidingView,
   AsyncStorage,
+  // 1: TouchableOpacityを追加
+  TouchableOpacity,
 } from 'react-native';
 
 const STATUSBAR_HEIGHT = Platform.OS == 'ios' ? 20 : StatusBar.currentHeight;
 const TODO = "@todoapp.todo"
+
+// 2: TODOアイテムの Functional Component
+const TodoItem = (props) => {
+  let textStyle = styles.todoItem
+  if (props.done === true) {
+    textStyle = styles.todoItemDone
+  }
+  return (
+    <TouchableOpacity onPress={props.onTapTodoItem}>
+      <Text style={textStyle}>{props.title}</Text>
+    </TouchableOpacity>
+  )
+}
 
 export default class App extends React.Component {
 
@@ -24,7 +39,6 @@ export default class App extends React.Component {
       todo: [],
       currentIndex: 0,
       inputText: "",
-      // 1: filter用のテキストを追加
       filterText: "",
     }
   }
@@ -71,8 +85,17 @@ export default class App extends React.Component {
     this.saveTodo(todo)
   }
 
+  // 3: TODOリストをタップした時の処理
+  onTapTodoItem = (todoItem) => {
+    const todo = this.state.todo
+    const index = todo.indexOf(todoItem)
+    todoItem.done = !todoItem.done
+    todo[index] = todoItem
+    this.setState({todo: todo})
+    this.saveTodo(todo)
+  }
+
   render() {
-    // 2: フィルター処理
     const filterText = this.state.filterText
     let todo = this.state.todo
     if (filterText !== "") {
@@ -81,7 +104,6 @@ export default class App extends React.Component {
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding">
         <View style={styles.filter}>
-          { /* 3: フィルタ入力 */ }
           <TextInput
             onChangeText={(text) => this.setState({filterText: text})}
             value={this.state.filterText}
@@ -90,9 +112,16 @@ export default class App extends React.Component {
           />
         </View>
         <ScrollView style={styles.todolist}>
-          { /* 4: データをフィルタした結果となるように修正 */ }
+          { /* 4: FlatListの修正 */ }
           <FlatList data={todo}
-            renderItem={({item}) => <Text>{item.title}</Text>}
+            extraData={this.state}
+            renderItem={({item}) =>
+              <TodoItem
+                title={item.title}
+                done={item.done}
+                onTapTodoItem={() => this.onTapTodoItem(item)}
+                />
+            }
             keyExtractor={(item, index) => "todo_" + item.index}
           />
         </ScrollView>
@@ -135,5 +164,14 @@ const styles = StyleSheet.create({
   },
   inputButton: {
     width: 100,
-  }
+  },
+  // 5: TODO表示用のスタイル
+  todoItem: {
+    fontSize: 20,
+    backgroundColor: "white",
+  },
+  todoItemDone: {
+    fontSize: 20,
+    backgroundColor: "red",
+  },
 });
