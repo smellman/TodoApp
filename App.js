@@ -7,26 +7,57 @@ import {
   Platform,
   ScrollView,
   FlatList,
-  // 1: TextInputとButtonとKeyboardAvoidingViewを追加
   TextInput,
   Button,
   KeyboardAvoidingView,
+  // 1: AsyncStorageを追加
+  AsyncStorage,
 } from 'react-native';
 
 const STATUSBAR_HEIGHT = Platform.OS == 'ios' ? 20 : StatusBar.currentHeight;
+// 2: TODOを保持するKey/Valueストアのキーを定義
+const TODO = "@todoapp.todo"
 
 export default class App extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      todo: [], // 2: TODOリストを空に
+      todo: [],
       currentIndex: 0,
-      inputText: "", // 3: テキスト入力用の箱を用意
+      inputText: "",
     }
   }
 
-  // 3: TODOリストへの追加処理
+  // 3: コンポーネントがマウントされた段階で読み込みを行う
+  componentDidMount() {
+    this.loadTodo()
+  }
+
+  // 4: AsyncStorageからTODOを読み込む処理
+  loadTodo = async () => {
+    try {
+      const todoString = await AsyncStorage.getItem(TODO)
+      if (todoString) {
+        const todo = JSON.parse(todoString)
+        const currentIndex = todo.length
+        this.setState({todo: todo, currentIndex: currentIndex})
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  // 5: AsyncStorageへTODOを保存する
+  saveTodo = async (todo) => {
+    try {
+      const todoString = JSON.stringify(todo)
+      await AsyncStorage.setItem(TODO, todoString)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   onAddItem = () => {
     const title = this.state.inputText
     if (title == "") {
@@ -40,10 +71,11 @@ export default class App extends React.Component {
       currentIndex: index,
       inputText: ""
     })
+    // 6: SaveTodoを呼んで保存をする
+    this.saveTodo(todo)
   }
 
   render() {
-    // 4: View を KeyboardAvoidingView へ変更、振る舞いをpaddingに
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding">
         <View style={styles.filter}>
@@ -56,7 +88,6 @@ export default class App extends React.Component {
           />
         </ScrollView>
         <View style={styles.input}>
-          { /* 5: テキスト入力とボタンを追加 */ }
           <TextInput
             onChangeText={(text) => this.setState({inputText: text})}
             value={this.state.inputText}
@@ -67,7 +98,7 @@ export default class App extends React.Component {
             title="Add"
             color="#841584"
             style={styles.inputButton}
-            />
+          />
         </View>
       </KeyboardAvoidingView>
     );
@@ -88,9 +119,8 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 30,
-    flexDirection: 'row', // 6: 下にある要素を横に並べる
+    flexDirection: 'row',
   },
-  // 7: テキスト入力とボタンのスタイル
   inputText: {
     flex: 1,
   },
