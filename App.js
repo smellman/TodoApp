@@ -11,14 +11,12 @@ import {
   Button,
   KeyboardAvoidingView,
   AsyncStorage,
-  // 1: TouchableOpacityを追加
   TouchableOpacity,
 } from 'react-native';
 
 const STATUSBAR_HEIGHT = Platform.OS == 'ios' ? 20 : StatusBar.currentHeight;
 const TODO = "@todoapp.todo"
 
-// 2: TODOアイテムの Functional Component
 const TodoItem = (props) => {
   let textStyle = styles.todoItem
   if (props.done === true) {
@@ -85,7 +83,6 @@ export default class App extends React.Component {
     this.saveTodo(todo)
   }
 
-  // 3: TODOリストをタップした時の処理
   onTapTodoItem = (todoItem) => {
     const todo = this.state.todo
     const index = todo.indexOf(todoItem)
@@ -112,7 +109,6 @@ export default class App extends React.Component {
           />
         </View>
         <ScrollView style={styles.todolist}>
-          { /* 4: FlatListの修正 */ }
           <FlatList data={todo}
             extraData={this.state}
             renderItem={({item}) =>
@@ -165,7 +161,6 @@ const styles = StyleSheet.create({
   inputButton: {
     width: 100,
   },
-  // 5: TODO表示用のスタイル
   todoItem: {
     fontSize: 20,
     backgroundColor: "white",
