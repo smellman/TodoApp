@@ -15,20 +15,30 @@ import {
   SearchBar,
   Input,
   Button,
+  // 1: ListItemを追加
+  ListItem,
 } from 'react-native-elements'
-import Icon from 'react-native-vector-icons/Feather';
+import Icon from 'react-native-vector-icons/Feather'
+// 2: done IconがあるMaterialIconsを追加
+import Icon2 from 'react-native-vector-icons/MaterialIcons'
 
 const STATUSBAR_HEIGHT = Platform.OS == 'ios' ? 20 : StatusBar.currentHeight;
 const TODO = "@todoapp.todo"
 
+// 3: TodoItemでTextではなくListItemを返すようにする
 const TodoItem = (props) => {
-  let textStyle = styles.todoItem
+  // 4: スタイルの入れ替えではなくアイコンの差し替えをするように変更
+  let icon = null
   if (props.done === true) {
-    textStyle = styles.todoItemDone
+    icon = <Icon2 name="done" />
   }
   return (
     <TouchableOpacity onPress={props.onTapTodoItem}>
-      <Text style={textStyle}>{props.title}</Text>
+      <ListItem
+        title={props.title}
+        rightIcon={icon}
+        bottomDivider
+      />
     </TouchableOpacity>
   )
 }
@@ -177,6 +187,8 @@ const styles = StyleSheet.create({
     borderRadius: 48,
     backgroundColor: '#ff6347', // ポモドーロを意識してトマト色
   },
+  // 削除
+  /*
   todoItem: {
     fontSize: 20,
     backgroundColor: "white",
@@ -185,4 +197,5 @@ const styles = StyleSheet.create({
     fontSize: 20,
     backgroundColor: "red",
   },
+  */
 });
