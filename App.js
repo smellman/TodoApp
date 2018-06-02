@@ -7,15 +7,21 @@ import {
   Platform,
   ScrollView,
   FlatList,
-  TextInput,
-  Button,
+  // 1: TextInputとButtonを削除
+  //TextInput,
+  //Button,
   KeyboardAvoidingView,
   AsyncStorage,
   TouchableOpacity,
 } from 'react-native';
 import {
-  SearchBar
+  SearchBar,
+  // 2: TextInputとButtonの代わりにreact-native-elementsのInputとButtonを利用
+  Input,
+  Button,
 } from 'react-native-elements'
+// 3: ボタンのアイコンを Feather から利用する
+import Icon from 'react-native-vector-icons/Feather';
 
 const STATUSBAR_HEIGHT = Platform.OS == 'ios' ? 20 : StatusBar.currentHeight;
 const TODO = "@todoapp.todo"
@@ -126,16 +132,24 @@ export default class App extends React.Component {
           />
         </ScrollView>
         <View style={styles.input}>
-          <TextInput
+          { /* 4: InputText を Input に変更 */ }
+          <Input
             onChangeText={(text) => this.setState({inputText: text})}
             value={this.state.inputText}
-            style={styles.inputText}
+            containerStyle={styles.inputText}
           />
+          { /* 5: Button をアイコンのみのボタンにする */ }
           <Button
+            icon={
+              <Icon
+                name='plus'
+                size={30}
+                color='white'
+              />
+            }
+            title=""
             onPress={this.onAddItem}
-            title="Add"
-            color="#841584"
-            style={styles.inputButton}
+            buttonStyle={styles.inputButton}
           />
         </View>
       </KeyboardAvoidingView>
@@ -152,15 +166,26 @@ const styles = StyleSheet.create({
   todolist: {
     flex: 1
   },
+  // 6: inputの高さ調整とボタンの配置位置の調整のためpaddingRightを追加
   input: {
-    height: 30,
+    height: 50,
     flexDirection: 'row',
+    paddingRight: 10,
   },
+  // 7: テキスト入力欄もpaddingを入れて配置をきれいに
   inputText: {
+    paddingLeft: 10,
+    paddingRight: 10,
     flex: 1,
   },
+  // 8: 円形のボタンを作成するため幅と同じ大きさのborderRadiusを入れる
   inputButton: {
-    width: 100,
+    width: 48,
+    height: 48,
+    borderWidth: 0,
+    borderColor: 'transparent',
+    borderRadius: 48,
+    backgroundColor: '#ff6347', // ポモドーロを意識してトマト色
   },
   todoItem: {
     fontSize: 20,
