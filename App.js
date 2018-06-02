@@ -13,7 +13,6 @@ import {
   AsyncStorage,
   TouchableOpacity,
 } from 'react-native';
-// 1: SearchBarをインポート
 import {
   SearchBar
 } from 'react-native-elements'
@@ -102,11 +101,9 @@ export default class App extends React.Component {
     if (filterText !== "") {
       todo = todo.filter(t => t.title.includes(filterText))
     }
-    // 2: SearchBarのplatformを決定
     const platform = Platform.OS == 'ios' ? 'ios' : 'android'
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding">
-        { /* 3: SearchBar を実装 */ }
         <SearchBar
           platform={platform}
           cancelButtonTitle="Cancel"
@@ -152,12 +149,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingTop: STATUSBAR_HEIGHT,
   },
-  // 4: filterのスタイルを削除
-  /*
-  filter: {
-    height: 30,
-  },
-  */
   todolist: {
     flex: 1
   },
