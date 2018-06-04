@@ -19,10 +19,8 @@ import {
 } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/Feather'
 import Icon2 from 'react-native-vector-icons/MaterialIcons'
-// 1: react-native-iphone-x-helper から ifIphoneXとgetStatusBarHeightをインポート
 import { ifIphoneX, getStatusBarHeight } from 'react-native-iphone-x-helper'
 
-// 2: OSごとの処理を getStatusBarHeight() に置き換え
 const STATUSBAR_HEIGHT = getStatusBarHeight()
 const TODO = "@todoapp.todo"
 
@@ -168,7 +166,6 @@ const styles = StyleSheet.create({
   todolist: {
     flex: 1
   },
-  // 3: ifPhoneXを使って高さとpaddingBottomを変更
   input: {
     ...ifIphoneX({
       paddingBottom: 30,
