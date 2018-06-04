@@ -8,6 +8,7 @@
     "react-native-elements": "^1.0.0-beta5",
     "react-native-iphone-x-helper": "^1.0.3",
     "react-redux": "^5.0.7",
-    "redux": "^4.0.0"
+    "redux": "^4.0.0",
+    "redux-persist": "^5.9.1"
   }
 }

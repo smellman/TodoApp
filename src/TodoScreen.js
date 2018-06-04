@@ -69,8 +69,7 @@ class TodoScreen extends React.Component {
 
   render() {
     const filterText = this.state.filterText
-    let todo = this.props.todos//this.state.todo
-    console.log(this.props.todos)
+    let todo = this.props.todos
     if (filterText !== "") {
       todo = todo.filter(t => t.title.includes(filterText))
     }
